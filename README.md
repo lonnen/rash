@@ -11,8 +11,7 @@ This does not aim to be a fully featured bash replacement. It's intentionally sl
 ## Usage
 
 ```shell
-./rash
->
+> cargo run
 ```
 
 ## License
