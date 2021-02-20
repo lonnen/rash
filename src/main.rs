@@ -10,9 +10,13 @@ fn main() {
         let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
 
-        let mut child = Command::new(input.trim())
-           .spawn()
-           .unwrap();
+        let mut tokens = input.trim().split_whitespace();
+        let command = tokens.next().unwrap();
+
+        let mut child = Command::new(command)
+            .args(tokens)
+            .spawn()
+            .unwrap();
 
         // wait for the command
         child.wait().ok().expect("1");
