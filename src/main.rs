@@ -1,5 +1,6 @@
-use std::io::Write;
-use std::io::{stdin, stdout};
+use std::env;
+use std::io::{stdin, stdout, Write};
+use std::path::Path;
 use std::process::Command;
 
 fn main() {
@@ -15,6 +16,14 @@ fn main() {
         let args = tokens;
 
         match command {
+            "cd" => {
+                const DEFAULT_DIR: &str = "/";
+                let new_dir = args.peekable().peek().map_or(DEFAULT_DIR, |x| *x);
+                let root = Path::new(new_dir);
+                if let Err(e) = env::set_current_dir(&root) {
+                    eprintln!("{}", e);
+                }
+            }
             command => {
                 let mut child = Command::new(command)
                     .args(args)
