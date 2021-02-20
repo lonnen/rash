@@ -13,12 +13,16 @@ fn main() {
         let mut tokens = input.trim().split_whitespace();
         let command = tokens.next().unwrap();
 
-        let mut child = Command::new(command)
-            .args(tokens)
-            .spawn()
-            .unwrap();
+        match command {
+            command => {
+                let mut child = Command::new(command)
+                    .args(tokens)
+                    .spawn()
+                    .unwrap();
 
-        // wait for the command
-        child.wait().ok().expect("1");
+                // wait for the command
+                child.wait().ok().expect("1");
+            }
+        }
     }
 }
