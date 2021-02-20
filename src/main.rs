@@ -12,11 +12,12 @@ fn main() {
 
         let mut tokens = input.trim().split_whitespace();
         let command = tokens.next().unwrap();
+        let args = tokens;
 
         match command {
             command => {
                 let mut child = Command::new(command)
-                    .args(tokens)
+                    .args(args)
                     .spawn()
                     .unwrap();
 
