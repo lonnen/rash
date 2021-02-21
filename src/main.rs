@@ -1,7 +1,7 @@
 use std::env;
 use std::io::{stdin, stdout, Write};
 use std::path::Path;
-use std::process::Command;
+use std::process::{Child, Command, Stdio};
 
 fn main() {
     loop {
@@ -11,31 +11,60 @@ fn main() {
         let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
 
-        let mut tokens = input.trim().split_whitespace();
-        let command = tokens.next().unwrap();
-        let args = tokens;
+        let mut commands = input.trim().split(" | ").peekable();
+        let mut previous_command = None;
 
-        match command {
-            "cd" => {
-                const DEFAULT_DIR: &str = "/";
-                let new_dir = args.peekable().peek().map_or(DEFAULT_DIR, |x| *x);
-                let root = Path::new(new_dir);
-                if let Err(e) = env::set_current_dir(&root) {
-                    eprintln!("{}", e);
+        while let Some(command) = commands.next() {
+
+            let mut tokens = command.trim().split_whitespace();
+            let command = tokens.next().unwrap();
+            let args = tokens;
+
+            match command {
+                "cd" => {
+                    const DEFAULT_DIR: &str = "/";
+                    let new_dir = args.peekable().peek().map_or(DEFAULT_DIR, |x| *x);
+                    let root = Path::new(new_dir);
+                    if let Err(e) = env::set_current_dir(&root) {
+                        eprintln!("{}", e);
+                    }
+                },
+                "exit" => {
+                    return
+                },
+                command => {
+                    let stdin = previous_command
+                        .map_or(Stdio::inherit(), |output: Child| Stdio::from(output.stdout.unwrap()));
+
+                    let stdout = if commands.peek().is_some() {
+                        // another command is piped so we need to patch the
+                        // output to the next command
+                        Stdio::piped()
+                    } else {
+                        // no more commands are piped so send to stdout
+                        Stdio::inherit()
+                    };
+
+                    let output = Command::new(command)
+                        .args(args)
+                        .stdin(stdin)
+                        .stdout(stdout)
+                        .spawn();
+
+                    match output {
+                        Ok(output) => { previous_command = Some(output); },
+                        Err(e) => {
+                            previous_command = None;
+                            eprintln!("{}", e);
+                        },
+                    };
                 }
-            },
-            "exit" => {
-                return
-            },
-            command => {
-                let mut child = Command::new(command)
-                    .args(args)
-                    .spawn()
-                    .unwrap();
-
-                // wait for the command
-                child.wait().ok().expect("1");
             }
+        }
+
+        if let Some(mut final_command) = previous_command {
+            // wait until things are done
+            final_command.wait().unwrap();
         }
     }
 }
