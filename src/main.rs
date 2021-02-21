@@ -23,7 +23,10 @@ fn main() {
                 if let Err(e) = env::set_current_dir(&root) {
                     eprintln!("{}", e);
                 }
-            }
+            },
+            "exit" => {
+                return
+            },
             command => {
                 let mut child = Command::new(command)
                     .args(args)
