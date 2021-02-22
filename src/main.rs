@@ -10,7 +10,7 @@ fn main() {
         stdout().flush().unwrap();
 
         let mut input = String::new();
-        stdin().read_line(&mut input).unwrap();
+        stdin().read_line(&mut input).expect("failed to read line from prompt");
 
         let mut commands = input.trim().split(" | ");
         let mut previous_command = None;
