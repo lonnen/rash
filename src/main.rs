@@ -6,7 +6,7 @@ use std::process::{Child, Command, Stdio};
 fn main() {
     let user = env::var("USER").unwrap();
     loop {
-        print!("{}@rash$ ", user);
+        print!("{}@rash:{:?} $ ", user, env::current_dir());
         stdout().flush().unwrap();
 
         let mut input = String::new();
