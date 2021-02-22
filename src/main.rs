@@ -22,6 +22,9 @@ fn main() {
             let args = tokens;
 
             match command {
+                "" => {
+                    continue
+                },
                 "cd" => {
                     const DEFAULT_DIR: &str = "/";
                     let new_dir = args.peekable().peek().map_or(DEFAULT_DIR, |x| *x);
