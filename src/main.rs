@@ -4,14 +4,15 @@ use std::path::Path;
 use std::process::{Child, Command, Stdio};
 
 fn main() {
+    let user = env::var("USER").unwrap();
     loop {
-        print!("$ ");
-        stdout().flush().ok().expect("Could not flush stdout");
+        print!("{}@rash$ ", user);
+        stdout().flush().unwrap();
 
         let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
 
-        let mut commands = input.trim().split(" | ").peekable();
+        let mut commands = input.trim().split(" | ");
         let mut previous_command = None;
 
         while let Some(command) = commands.next() {
