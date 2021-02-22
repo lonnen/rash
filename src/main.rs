@@ -12,7 +12,7 @@ fn main() {
         let mut input = String::new();
         stdin().read_line(&mut input).expect("failed to read line from prompt");
 
-        let mut commands = input.trim().split(" | ");
+        let mut commands = input.trim().split(" | ").peekable();
         let mut previous_command = None;
 
         while let Some(command) = commands.next() {
