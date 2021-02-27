@@ -1,3 +1,4 @@
+use chrono::prelude::Local;
 use std::env;
 use std::io::{stdin, stdout, Write};
 use std::path::Path;
@@ -5,8 +6,18 @@ use std::process::{Child, Command, Stdio};
 
 fn main() {
     let user = env::var("USER").unwrap();
+    let exit_code: u8 = 0;
+
     loop {
-        print!("{}@rash:{:?} $ ", user, env::current_dir());
+        print!("{user}@rash:{directory}:\n[{time}]",
+            user=user,
+            directory=env::current_dir().unwrap().to_string_lossy(),
+            time=Local::now().format("%H:%M:%S").to_string(),
+        );
+        if exit_code != 0 {
+            print!(" {}", exit_code);
+        }
+        print!(" $ ");
         stdout().flush().unwrap();
 
         let mut input = String::new();
