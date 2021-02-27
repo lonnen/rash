@@ -1,6 +1,6 @@
 # rash
 
-**R**ust **a**gain **sh***ell
+**R**ust **a**gain **sh**ell
 
 ## Overview
 
