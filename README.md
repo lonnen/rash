@@ -2,6 +2,8 @@
 
 **R**ust **a**gain **sh**ell
 
+[CI status badge](https://github.com/lonnen/rash/actions/workflows/rust.yml/badge.svg)
+
 ## Overview
 
 Rash? I don't know. I needed an adjacent name that was also inherently discouraging to curious users. This is written in Rust but that does not mean this is inherently safe -- it's a shell. Small mistakes in Shells can ruin your whole machine. Be Careful.
